@@ -1,0 +1,16 @@
+{
+  "name": "p14-social-analytics-dashboard",
+  "version": "1.0.0",
+  "description": "Polyglot NoSQL Social Media Analytics Dashboard",
+  "main": "index.js",
+  "scripts": {
+    "infra:up": "docker-compose up -d",
+    "infra:down": "docker-compose down",
+    "infra:status": "docker-compose ps",
+    "backend:install": "cd backend && npm install",
+    "backend:dev": "cd backend && npm run dev",
+    "start": "npm run infra:up && npm run backend:dev"
+  },
+  "author": "Murat Sili",
+  "license": "MIT"
+}
