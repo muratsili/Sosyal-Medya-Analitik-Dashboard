@@ -1,0 +1,60 @@
+### 1. Health Check
+GET http://localhost:3000/health
+
+### 2. Auth: Register
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "email": "murat@test.com",
+  "handle": "@murat",
+  "password": "password123"
+}
+
+### 3. Auth: Login
+# @name login
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "murat@test.com",
+  "password": "password123"
+}
+
+### Store Token
+@token = {{login.response.body.token}}
+
+### 4. Create Post
+POST http://localhost:3000/posts
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "content": "NoSQL projesi harika ilerliyor! #NoSQL #P14 #Basari",
+  "hashtags": ["NoSQL", "P14", "Basari"]
+}
+
+### 5. Engagement: Like
+POST http://localhost:3000/engagements
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "postId": "PASTE_POST_ID_HERE",
+  "type": "like"
+}
+
+### 6. Analytics: Trending
+GET http://localhost:3000/analytics/trending?period=hourly
+
+### 7. Analytics: Influencers
+GET http://localhost:3000/analytics/influencers
+
+### 8. Analytics: Communities
+GET http://localhost:3000/analytics/communities
+
+### 9. User: Timeline
+GET http://localhost:3000/users/PASTE_USER_ID_HERE/timeline
+
+### 10. Hashtag: Time-Series
+GET http://localhost:3000/hashtags/NoSQL/timeseries?from=2026-05-01&to=2026-05-07

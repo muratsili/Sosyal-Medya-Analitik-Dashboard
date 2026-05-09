@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  scylla:
+    image: scylladb/scylla:latest
+    container_name: scylla_p14
+    command: ["--smp", "2", "--memory", "2G", "--overprovisioned", "1"]
+    ports:
+      - "9042:9042"
+    healthcheck:
+      test: ["CMD", "cqlsh", "-e", "DESCRIBE KEYSPACES"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+    volumes:
+      - scylla_data:/var/lib/scylla
+      - ./init-scylla.cql:/init-scylla.cql
+
+  neo4j:
+    image: neo4j:5.18-community
+    container_name: neo4j_p14
+    environment:
+      NEO4J_AUTH: neo4j/password
+      NEO4J_PLUGINS: '["graph-data-science","apoc"]'
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    healthcheck:
+      test: ["CMD", "cypher-shell", "-u", "neo4j", "-p", "password", "RETURN 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+    volumes:
+      - neo4j_data:/data
+      - ./init-neo.cypher:/var/lib/neo4j/import/init-neo.cypher
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis_p14
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  backend:
+    build: ./backend
+    container_name: backend_p14
+    ports:
+      - "3000:3000"
+    environment:
+      - JWT_SECRET=supersecret
+      - SCYLLA_CONTACT_POINTS=scylla
+      - NEO4J_URI=bolt://neo4j:7687
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    depends_on:
+      scylla:
+        condition: service_healthy
+      neo4j:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+volumes:
+  neo4j_data:
+  scylla_data:
+  redis_data:
