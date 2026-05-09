@@ -23,8 +23,7 @@ docker exec scylla_p14 cqlsh -f /init-scylla.cql
 docker exec neo4j_p14 cypher-shell -u neo4j -p password -f /var/lib/neo4j/import/init-neo.cypher
 
 echo 4. Ornek veriler (Seed) yukleniyor...
-cd backend
-call npm run seed
+docker exec backend_p14 npm run seed
 
 echo ==========================================
 echo   PROJE BASARIYLA CALISTIRILDI!
