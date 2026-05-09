@@ -35,9 +35,9 @@ async function seed() {
   const userHandles: string[] = [];
 
   // 1. Seed Users
-  console.log('\n→ Seeding 10000 users...');
+  console.log('\n→ Seeding 500 users...');
   const startTime = Date.now();
-  for (let i = 0; i < 10000; i++) {
+  for (let i = 0; i < 500; i++) {
     const userId = uuidv4();
     const handle = `user_${i}`;
     userIds.push(userId);
@@ -50,19 +50,19 @@ async function seed() {
     );
     await neoSession.close();
 
-    if ((i + 1) % 2000 === 0) {
-      console.log(`  [Users] ${i + 1}/10000 (${Date.now() - startTime}ms)`);
+    if ((i + 1) % 100 === 0) {
+      console.log(`  [Users] ${i + 1}/500 (${Date.now() - startTime}ms)`);
     }
   }
-  console.log(`✅ 10000 users seeded in ${Date.now() - startTime}ms`);
+  console.log(`✅ 500 users seeded in ${Date.now() - startTime}ms`);
 
   // 2. Seed Follows
-  console.log('\n→ Seeding 100000 follows...');
+  console.log('\n→ Seeding 2000 follows...');
   const followStartTime = Date.now();
-  for (let i = 0; i < 100000; i++) {
-    const fromIdx = Math.floor(Math.random() * 10000);
-    let toIdx = Math.floor(Math.random() * 10000);
-    while (fromIdx === toIdx) toIdx = Math.floor(Math.random() * 10000);
+  for (let i = 0; i < 2000; i++) {
+    const fromIdx = Math.floor(Math.random() * 500);
+    let toIdx = Math.floor(Math.random() * 500);
+    while (fromIdx === toIdx) toIdx = Math.floor(Math.random() * 500);
 
     const neoSession = neo4jDriver.session();
     await neoSession.run(
@@ -71,19 +71,19 @@ async function seed() {
     );
     await neoSession.close();
 
-    if ((i + 1) % 10000 === 0) {
-      console.log(`  [Follows] ${i + 1}/100000 (${Date.now() - followStartTime}ms)`);
+    if ((i + 1) % 500 === 0) {
+      console.log(`  [Follows] ${i + 1}/2000 (${Date.now() - followStartTime}ms)`);
     }
   }
-  console.log(`✅ 100000 follows seeded in ${Date.now() - followStartTime}ms`);
+  console.log(`✅ 2000 follows seeded in ${Date.now() - followStartTime}ms`);
 
   // 3. Seed Posts
-  console.log('\n→ Seeding 100000 posts...');
+  console.log('\n→ Seeding 5000 posts...');
   const postStartTime = Date.now();
   const hashtags = ['#NoSQL', '#ScyllaDB', '#Neo4j', '#Redis', '#BigData', '#Tech', '#SocialMedia', '#Analytics', '#Database', '#Coding'];
   
-  for (let i = 0; i < 100000; i++) {
-    const userId = userIds[Math.floor(Math.random() * 10000)];
+  for (let i = 0; i < 5000; i++) {
+    const userId = userIds[Math.floor(Math.random() * 500)];
     const postId = TimeUuid.fromDate(new Date());
     const content = `This is post number ${i} about some interesting tech! #Tech #NoSQL`;
     const postHashtags = [hashtags[Math.floor(Math.random() * hashtags.length)], hashtags[Math.floor(Math.random() * hashtags.length)]];
@@ -114,11 +114,11 @@ async function seed() {
 
     await scyllaClient.batch(queries, { prepare: true });
 
-    if ((i + 1) % 10000 === 0) {
-      console.log(`  [Posts] ${i + 1}/100000 (${Date.now() - postStartTime}ms)`);
+    if ((i + 1) % 1000 === 0) {
+      console.log(`  [Posts] ${i + 1}/5000 (${Date.now() - postStartTime}ms)`);
     }
   }
-  console.log(`✅ 100000 posts seeded in ${Date.now() - postStartTime}ms`);
+  console.log(`✅ 5000 posts seeded in ${Date.now() - postStartTime}ms`);
 
   // 4. Run Algorithms
   console.log('\n→ Running PageRank...');
